@@ -1,7 +1,7 @@
 - job name: build-and-deploy-petclinic-on-qa-env  
 - job type: Freestyle project
 - Source Code Management: Git
-      Repository URL: https://github.com/jmshinn13/petclinic-microservices-with-db.git
+      Repository URL: https://github.com/justin17388/petclinic-microservices-with-db.git
 - Branches to build:
       Branch Specifier (blank for 'any'): */release
 - Build:
