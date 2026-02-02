@@ -54,8 +54,8 @@ resource "aws_security_group" "k8s-sec-gr" {
 }
 
 
-resource "aws_iam_role" "petclinic-master-server-s3-role" {
-  name               = "petclinic-master-server-role"
+resource "aws_iam_role" "petclinic-master-server-s3-role1" {
+  name               = "petclinic-master-server-role1"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -75,13 +75,13 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "petclinic_s3_policy" {
-  role       = aws_iam_role.petclinic-master-server-s3-role.name
+  role       = aws_iam_role.petclinic-master-server-s3-role1.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
 }
 
 resource "aws_iam_instance_profile" "petclinic-master-server-profile" {
   name = "petclinic-master-server-profile"
-  role = aws_iam_role.petclinic-master-server-s3-role.name
+  role = aws_iam_role.petclinic-master-server-s3-role1.name
 }
 
 resource "aws_instance" "kube-master" {
