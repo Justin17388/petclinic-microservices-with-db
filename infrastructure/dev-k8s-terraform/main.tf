@@ -11,10 +11,10 @@ data "aws_vpc" "name" {
 }
 
 resource "aws_security_group" "k8s-sec-gr" {
-  name = var.sec-gr-k8s
+  name = ${var.sec_gr_k8s}-${var.env}-${var.build_id}
   vpc_id = data.aws_vpc.name.id
   tags = {
-    Name = var.sec-gr-k8s
+    Name = ${var.sec_gr_k8s}-${var.env}-${var.build_id}
   }
 
   ingress {
@@ -54,8 +54,8 @@ resource "aws_security_group" "k8s-sec-gr" {
 }
 
 
-resource "aws_iam_role" "petclinic-master-server-s3-role1" {
-  name               = "petclinic-master-server-role1"
+resource "aws_iam_role" "petclinic-master-server-s3-role" {
+  name               = "petclinic-master-server-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -75,13 +75,13 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "petclinic_s3_policy" {
-  role       = aws_iam_role.petclinic-master-server-s3-role1.name
+  role       = aws_iam_role.petclinic-master-server-s3-role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
 }
 
 resource "aws_iam_instance_profile" "petclinic-master-server-profile" {
   name = "petclinic-master-server-profile"
-  role = aws_iam_role.petclinic-master-server-s3-role1.name
+  role = aws_iam_role.petclinic-master-server-s3-role.name
 }
 
 resource "aws_instance" "kube-master" {
@@ -90,8 +90,8 @@ resource "aws_instance" "kube-master" {
   iam_instance_profile = aws_iam_instance_profile.petclinic-master-server-profile.name
   vpc_security_group_ids = [aws_security_group.k8s-sec-gr.id]
   key_name = "clarus"
-  subnet_id = "subnet-072cafbb54d20c3b6"  # select own subnet_id of us-east-1e
-  availability_zone = "us-east-1e"
+  subnet_id = "subnet-0eeff02a3066f919f"  # select own subnet_id of us-east-1a
+  availability_zone = "us-east-1a"
   tags = {
     Name = "kube-master"
     Project = "tera-kube-ans"
@@ -106,8 +106,8 @@ resource "aws_instance" "worker-1" {
   instance_type = "t3a.medium"
   vpc_security_group_ids = [aws_security_group.k8s-sec-gr.id]
   key_name = "clarus"
-  subnet_id = "subnet-0e08c5a3fa12b7ab9"  # select own subnet_id of us-east-1d
-  availability_zone = "us-east-1d"
+  subnet_id = "subnet-0c763511f23d056d7"  # select own subnet_id of us-east-1a
+  availability_zone = "us-east-1b"
   tags = {
     Name = "worker-1"
     Project = "tera-kube-ans"
@@ -122,8 +122,8 @@ resource "aws_instance" "worker-2" {
   instance_type = "t3a.medium"
   vpc_security_group_ids = [aws_security_group.k8s-sec-gr.id]
   key_name = "clarus"
-  subnet_id = "subnet-0eeff02a3066f919f"  # select own subnet_id of us-east-1a
-  availability_zone = "us-east-1a"
+  subnet_id = "subnet-07a6ef077ac2bf1d5"  # select own subnet_id of us-east-1c
+  availability_zone = "us-east-1c"
   tags = {
     Name = "worker-2"
     Project = "tera-kube-ans"
